@@ -1,19 +1,19 @@
-<div class="container" *ngIf="book !== null">
+<div class="container" *ngIf="_book !== null">
   <h2>Book details</h2>
 
   <div class="mb-3">
     <label for="title" class="form-label">Title</label>
-    <input type="text" id="title" class="form-control" [(ngModel)]="book.title">
+    <input type="text" id="title" class="form-control" [(ngModel)]="_book.title">
   </div>
 
   <div class="mb-3">
     <label for="author" class="form-label">Author</label>
-    <input type="text" id="author" class="form-control" [(ngModel)]="book.author">
+    <input type="text" id="author" class="form-control" [(ngModel)]="_book.author">
   </div>
 
   <div class="mb-3">
     <label for="year" class="form-label">Year</label>
-    <input type="number" id="year" class="form-control" [(ngModel)]="book.year">
+    <input type="number" id="year" class="form-control" [(ngModel)]="_book.year">
   </div>
 
   <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -22,4 +22,4 @@
   </div>
 </div>
 
-<p *ngIf="book === null">Please select a book.</p>
+<p *ngIf="_book === null">Please select a book.</p>

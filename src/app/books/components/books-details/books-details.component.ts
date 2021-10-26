@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Book} from "../../model/book";
 
 @Component({
@@ -8,11 +8,24 @@ import {Book} from "../../model/book";
 })
 export class BooksDetailsComponent {
 
+  _book: Book | null = null;
+
   @Input()
-  book: Book | null = null;
+  get book() {
+    return this._book;
+  }
+
+  set book(value: Book | null) {
+    this._book = value ? {...value} : null;
+  }
+
+  @Output()
+  bookUpdated = new EventEmitter<Book>();
 
   save() {
-    console.log("Save clicked!");
+    if(this._book) {
+      this.bookUpdated.emit(this._book);
+    }
   }
 
   revert() {

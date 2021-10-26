@@ -11,6 +11,10 @@
         <button class="btn btn-link" (click)="selectBook(book)">Select</button>
       </div>
     </div>
-    <app-books-details [book]="selectedBook" class="col-8"></app-books-details>
+    <app-books-details
+        [book]="selectedBook"
+        (bookUpdated)="bookUpdated($event)"
+        class="col-8">
+    </app-books-details>
   </div>
 </div>

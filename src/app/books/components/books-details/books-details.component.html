@@ -1,6 +1,5 @@
-<div class="container">
+<div class="container" *ngIf="book !== null">
   <h2>Book details</h2>
-
 
   <div class="mb-3">
     <label for="title" class="form-label">Title</label>
@@ -21,9 +20,6 @@
     <button (click)="save()" class="btn btn-primary">Save</button>
     <button (click)="revert()" class="btn btn-light">Revert</button>
   </div>
-
-  <div class="mb-3">
-    {{ book.title}}, {{ book.author}}, {{ book.year}}.
-  </div>
-
 </div>
+
+<p *ngIf="book === null">Please select a book.</p>

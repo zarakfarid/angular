@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Book} from "../../model/book";
 
 @Component({
@@ -8,12 +8,8 @@ import {Book} from "../../model/book";
 })
 export class BooksDetailsComponent {
 
-  book: Book = {
-    id: null,
-    title: 'Solaris',
-    author: 'Stanisław Lem',
-    year: 1960
-  };
+  @Input()
+  book: Book | null = null;
 
   save() {
     console.log("Save clicked!");

@@ -27,6 +27,9 @@ export class BooksDetailsComponent {
   @Output()
   bookUpdated = new EventEmitter<Book>();
 
+  constructor() {
+  }
+
   save() {
     if(this._book) {
       this.bookUpdated.emit({...this._book});

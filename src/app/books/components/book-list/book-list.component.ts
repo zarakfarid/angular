@@ -1,40 +1,29 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Book} from "../../model/book";
+import {BooksService} from "../../services/books.service";
+import {Subscription} from "rxjs";
 
 @Component({
     selector: 'app-book-list',
     templateUrl: './book-list.component.html',
-    styleUrls: ['./book-list.component.scss']
+    styleUrls: ['./book-list.component.scss'],
 })
-export class BookListComponent implements OnInit {
+export class BookListComponent implements OnDestroy {
 
-    books: Book[] = [
-        {
-            id: 1,
-            title: 'Solaris',
-            author: 'Stanisław Lem',
-            year: 1960
-        },
-        {
-            id: 2,
-            title: '2001: A Space Odyssey',
-            author: 'Arthur C Clarke',
-            year: 1968
-        },
-        {
-            id: 3,
-            title: 'Ubik',
-            author: 'Phillip K Dick',
-            year: 1965
-        }
-    ];
+    books: Book[] = [];
 
     selectedBook: Book | null = null;
 
-    constructor() {
+    private booksSubscription: Subscription;
+
+    constructor(private readonly bookService: BooksService) {
+        this.booksSubscription = this.bookService.books$.subscribe(value => {
+           this.books = value;
+        });
     }
 
-    ngOnInit(): void {
+    ngOnDestroy(): void {
+        this.booksSubscription.unsubscribe();
     }
 
     selectBook(book: Book): void {
@@ -42,8 +31,7 @@ export class BookListComponent implements OnInit {
     }
 
     bookUpdated(book: Book) {
-        this.books = this.books
-            .map(current => current.id === book.id ? book : current);
+        this.bookService.updateBook(book);
         this.selectedBook = null;
     }
 }

@@ -1,25 +1,29 @@
-<h2>Book details</h2>
+<div class="container">
+  <h2>Book details</h2>
 
-<div>
-  <label for="title">Title</label>
-  <input type="text" id="title" [(ngModel)]="book.title">
-</div>
 
-<div>
-  <label for="author">Author</label>
-  <input type="text" id="author" [(ngModel)]="book.author">
-</div>
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input type="text" id="title" class="form-control" [(ngModel)]="book.title">
+  </div>
 
-<div>
-  <label for="year">Year</label>
-  <input type="number" id="year" [(ngModel)]="book.year">
-</div>
+  <div class="mb-3">
+    <label for="author" class="form-label">Author</label>
+    <input type="text" id="author" class="form-control" [(ngModel)]="book.author">
+  </div>
 
-<div>
-  <button (click)="save()">Save</button>
-  <button (click)="revert()">Revert</button>
-</div>
+  <div class="mb-3">
+    <label for="year" class="form-label">Year</label>
+    <input type="number" id="year" class="form-control" [(ngModel)]="book.year">
+  </div>
 
-<div>
-  {{ book.title}}, {{ book.author}}, {{ book.year}}.
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <button (click)="save()" class="btn btn-primary">Save</button>
+    <button (click)="revert()" class="btn btn-light">Revert</button>
+  </div>
+
+  <div class="mb-3">
+    {{ book.title}}, {{ book.author}}, {{ book.year}}.
+  </div>
+
 </div>

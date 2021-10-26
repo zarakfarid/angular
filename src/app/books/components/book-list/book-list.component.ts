@@ -44,5 +44,6 @@ export class BookListComponent implements OnInit {
     bookUpdated(book: Book) {
         this.books = this.books
             .map(current => current.id === book.id ? book : current);
+        this.selectedBook = null;
     }
 }

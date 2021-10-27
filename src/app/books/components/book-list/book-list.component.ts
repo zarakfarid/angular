@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {Book} from "../../model/book";
 import {BooksService} from "../../services/books.service";
 import {Observable} from "rxjs";
@@ -8,14 +8,12 @@ import {Observable} from "rxjs";
     templateUrl: './book-list.component.html',
     styleUrls: ['./book-list.component.scss'],
 })
-export class BookListComponent {
+export class BookListComponent implements AfterViewInit {
 
-    readonly books$: Observable<Book[]>;
-
+    books$: Observable<Book[]> | null = null;
     selectedBook: Book | null = null;
 
     constructor(private readonly bookService: BooksService) {
-        this.books$ = this.bookService.books$;
     }
 
     selectBook(book: Book): void {
@@ -25,5 +23,9 @@ export class BookListComponent {
     bookUpdated(book: Book) {
         this.bookService.updateBook(book);
         this.selectedBook = null;
+    }
+
+    ngAfterViewInit(): void {
+        this.books$ = this.bookService.books$;
     }
 }

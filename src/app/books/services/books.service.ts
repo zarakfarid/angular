@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {Book} from "../model/book";
 import {BehaviorSubject, Observable} from "rxjs";
-import {delay} from "rxjs/operators";
+import {delay, tap} from "rxjs/operators";
+import {SpinnerService} from "../../shared/services/spinner.service";
 
 @Injectable()
 export class BooksService {
@@ -31,9 +32,13 @@ export class BooksService {
     }
   ];
 
-  constructor() {
+  constructor(private readonly spinnerService: SpinnerService) {
     this._books$ = new BehaviorSubject<Book[]>(this.books);
-    this.books$ = this._books$.pipe(delay(1000));
+    this.books$ = this._books$.pipe(
+        tap(_ => this.spinnerService.show()),
+        delay(1000),
+        tap( _ => this.spinnerService.hide())
+    );
   }
 
   updateBook(book: Book) {

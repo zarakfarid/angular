@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import {SpinnerService} from "./shared/services/spinner.service";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -6,6 +8,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
   title = 'foo bar';
-  subtitle = 'angular training!';
+
+  readonly showSpinner$: Observable<boolean>;
+
+  constructor(private readonly spinnerService: SpinnerService) {
+    this.showSpinner$ = this.spinnerService.showSpinner$;
+  }
 }

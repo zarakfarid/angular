@@ -9,7 +9,7 @@
       </div>
     </div>
     <app-books-details
-        *ngIf="selectedBook"
+        [ngStyle]="{'display': selectedBook ? 'block' : 'none'}"
         [book]="selectedBook"
         (bookUpdated)="bookUpdated($event)"
         class="col-8">

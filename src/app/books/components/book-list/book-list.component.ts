@@ -1,4 +1,4 @@
-import {AfterViewInit, Component} from '@angular/core';
+import {AfterViewInit, Component, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {Book} from "../../model/book";
 import {BooksService} from "../../services/books.service";
 import {Observable} from "rxjs";
@@ -8,7 +8,7 @@ import {Observable} from "rxjs";
     templateUrl: './book-list.component.html',
     styleUrls: ['./book-list.component.scss'],
 })
-export class BookListComponent implements AfterViewInit {
+export class BookListComponent implements AfterViewInit, OnInit {
 
     books$: Observable<Book[]> | null = null;
     selectedBook: Book | null = null;
@@ -26,6 +26,11 @@ export class BookListComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        console.log("after view init list");
         this.books$ = this.bookService.books$;
+    }
+
+    ngOnInit(): void {
+        console.log("on init list");
     }
 }

@@ -1,14 +1,4 @@
-import {
-    AfterViewInit,
-    Component,
-    EventEmitter,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    Output,
-    SimpleChanges
-} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Book} from "../../model/book";
 
 const makeCopy = (book: Book | null) => book ? {...book} : null;
@@ -18,7 +8,7 @@ const makeCopy = (book: Book | null) => book ? {...book} : null;
     templateUrl: './books-details.component.html',
     styleUrls: ['./books-details.component.scss']
 })
-export class BooksDetailsComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
+export class BooksDetailsComponent {
 
     _book: Book | null = null;
 
@@ -36,27 +26,6 @@ export class BooksDetailsComponent implements OnChanges, OnInit, AfterViewInit, 
 
     @Output()
     bookUpdated = new EventEmitter<Book>();
-
-    constructor() {
-        console.log("constructor details");
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        console.log("on changes details");
-        console.log(changes);
-    }
-
-    ngOnInit() {
-        console.log("on init details");
-    }
-
-    ngAfterViewInit() {
-        console.log("on after view init details");
-    }
-
-    ngOnDestroy() {
-        console.log("on destroy details");
-    }
 
     save() {
         if (this._book) {

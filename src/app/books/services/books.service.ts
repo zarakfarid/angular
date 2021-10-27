@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import {Book} from "../model/book";
-import {BehaviorSubject, Subject} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
+import {delay} from "rxjs/operators";
 
 @Injectable()
 export class BooksService {
 
-  books$: Subject<Book[]>;
+  readonly books$: Observable<Book[]>;
+
+  private readonly _books$: BehaviorSubject<Book[]>;
 
   private books: Book[] = [
     {
@@ -29,12 +32,13 @@ export class BooksService {
   ];
 
   constructor() {
-    this.books$ = new BehaviorSubject<Book[]>(this.books);
+    this._books$ = new BehaviorSubject<Book[]>(this.books);
+    this.books$ = this._books$.pipe(delay(1000));
   }
 
   updateBook(book: Book) {
     this.books = this.books
         .map(current => current.id === book.id ? book : current);
-    this.books$.next(this.books);
+    this._books$.next(this.books);
   }
 }

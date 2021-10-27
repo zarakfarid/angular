@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Book} from "../../model/book";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
 
 const makeCopy = (book: Book | null) => book ? {...book} : null;
 
@@ -12,7 +13,7 @@ export class BooksDetailsComponent {
 
     _book: Book | null = null;
 
-    private originalValue: Book | null = null;
+    formGroup: FormGroup;
 
     @Input()
     get book() {
@@ -20,20 +21,47 @@ export class BooksDetailsComponent {
     }
 
     set book(value: Book | null) {
-        this.originalValue = makeCopy(value);
         this._book = makeCopy(value);
+        this.updateFormControls();
     }
 
     @Output()
     bookUpdated = new EventEmitter<Book>();
 
-    save() {
+    private titleControl = new FormControl("");
+    private authorControl = new FormControl("");
+    private yearControl = new FormControl(null);
+
+    constructor() {
+        this.formGroup = new FormGroup({
+            title: this.titleControl,
+            author: this.authorControl,
+            year: this.yearControl
+        });
+    }
+
+    save(): void {
         if (this._book) {
+            this.extractFormControls();
             this.bookUpdated.emit({...this._book});
         }
     }
 
-    revert() {
-        this._book = makeCopy(this.originalValue);
+    revert(): void {
+        this.updateFormControls();
+    }
+
+    private updateFormControls(): void {
+        this.titleControl.setValue(this._book?.title);
+        this.authorControl.setValue(this._book?.author);
+        this.yearControl.setValue(this._book?.year);
+    }
+
+    private extractFormControls(): void {
+        if (this._book) {
+            this._book.title = this.titleControl.value;
+            this._book.author = this.authorControl.value;
+            this._book.year = this.yearControl.value;
+        }
     }
 }

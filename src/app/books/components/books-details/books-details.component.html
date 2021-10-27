@@ -1,25 +1,28 @@
 <div class="container" *ngIf="_book !== null">
   <h2>Book details</h2>
 
-  <div class="mb-3">
-    <label for="title" class="form-label">Title</label>
-    <input type="text" id="title" class="form-control" [(ngModel)]="_book.title">
-  </div>
+  <form [formGroup]="formGroup">
 
-  <div class="mb-3">
-    <label for="author" class="form-label">Author</label>
-    <input type="text" id="author" class="form-control" [(ngModel)]="_book.author">
-  </div>
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" id="title" class="form-control" formControlName="title">
+    </div>
 
-  <div class="mb-3">
-    <label for="year" class="form-label">Year</label>
-    <input type="number" id="year" class="form-control" [(ngModel)]="_book.year">
-  </div>
+    <div class="mb-3">
+      <label for="author" class="form-label">Author</label>
+      <input type="text" id="author" class="form-control" formControlName="author">
+    </div>
 
-  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-    <button (click)="save()" class="btn btn-primary app-save-button">Save</button>
-    <button (click)="revert()" class="btn btn-light">Revert</button>
-  </div>
+    <div class="mb-3">
+      <label for="year" class="form-label">Year</label>
+      <input type="number" id="year" class="form-control" formControlName="year">
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+      <button (click)="save()" class="btn btn-primary app-save-button">Save</button>
+      <button (click)="revert()" class="btn btn-light">Revert</button>
+    </div>
+  </form>
 </div>
 
 <p *ngIf="_book === null" class="app-message">Please select a book.</p>

@@ -4,6 +4,7 @@ import {StartPageComponent} from "./start-page/components/start-page/start-page.
 import {BookListComponent} from "./books/components/book-list/book-list.component";
 import {NoPageFoundComponent} from "./start-page/components/no-page-found/no-page-found.component";
 import {BooksDetailsComponent} from "./books/components/books-details/books-details.component";
+import {BookListResolver} from "./books/components/book-list/book-list.resolver";
 
 const routes: Routes = [
   {
@@ -12,7 +13,10 @@ const routes: Routes = [
   },
   {
     path: "books",
-    component: BookListComponent
+    component: BookListComponent,
+    resolve: {
+      books: BookListResolver
+    }
   },
   {
     path: "books/edit",

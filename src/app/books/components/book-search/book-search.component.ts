@@ -1,8 +1,8 @@
-import {AfterViewInit, Component, OnDestroy} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {BooksService} from "../../services/books.service";
-import {FormControl, FormGroup} from "@angular/forms";
-import {Observable, Subject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {Observable} from "rxjs";
+import {debounceTime, distinctUntilChanged, filter, switchMap} from "rxjs/operators";
 import {Book} from "../../model/book";
 
 @Component({
@@ -10,34 +10,27 @@ import {Book} from "../../model/book";
     templateUrl: './book-search.component.html',
     styleUrls: ['./book-search.component.scss']
 })
-export class BookSearchComponent implements OnDestroy, AfterViewInit {
+export class BookSearchComponent implements AfterViewInit {
 
-    books$: Observable<Book[]> | null = null;
+    books$: Observable<Book[]>;
     readonly formGroup: FormGroup;
     private readonly searchControl: FormControl;
-    private readonly unsubscribe = new Subject();
 
     constructor(private readonly booksService: BooksService) {
-        this.searchControl = new FormControl("");
+        this.searchControl = new FormControl(null, [Validators.required, Validators.minLength(2)]);
         this.formGroup = new FormGroup({
             search: this.searchControl
         });
 
-        this.searchControl.valueChanges
-            .pipe(takeUntil(this.unsubscribe))
-            .subscribe(query => {
-                console.log(query);
-                this.books$ = this.booksService.findBooks(query);
-            });
-
-    }
-
-    ngOnDestroy() {
-        this.unsubscribe.next();
-        this.unsubscribe.complete();
+        this.books$ = this.searchControl.valueChanges
+            .pipe(
+                debounceTime(300),
+                distinctUntilChanged(),
+                switchMap(query => this.booksService.findBooks(query))
+            );
     }
 
     ngAfterViewInit() {
-        setTimeout(() => this.books$ = this.booksService.getAllBooks());
+        // this.searchControl.setValue("");
     }
 }

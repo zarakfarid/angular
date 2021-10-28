@@ -3,7 +3,7 @@
 @import "~bootstrap/scss/bootstrap";
 
 form {
-  input.ng-invalid {
+  input.ng-invalid.ng-touched {
     @extend .is-invalid;
   }
 }

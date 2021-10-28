@@ -34,15 +34,15 @@ export class BooksService {
     }
 
     getAllBooks(): Observable<Book[]> {
-        return of(this.books).pipe(
-            tap(_ => this.spinnerService.show()),
-            delay(DELAY),
-            tap(_ => this.spinnerService.hide()));
+        return of(this.books);
     }
 
     findBooks(query: string): Observable<Book[]> {
+        const compare = (left: string, right: string) => {
+            return left.toUpperCase().indexOf(right.toUpperCase()) >= 0;
+        }
         const searchFn = (query: string) => {
-          return (book: Book) => book.title.indexOf(query) >= 0 || book.author.indexOf(query) >= 0;
+          return (book: Book) => compare(book.title, query) || compare(book.author, query);
         };
         return of(this.books.filter(searchFn(query)));
     }

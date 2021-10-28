@@ -12,6 +12,6 @@ export class BookListResolver implements Resolve<Book[]> {
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Book[]> {
-        return this.booksService.books$.pipe(take(1));
+        return this.booksService.getAllBooks().pipe(take(1));
     }
 }

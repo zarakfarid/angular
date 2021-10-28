@@ -1,8 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {Book} from "../../model/book";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {BooksService} from "../../services/books.service";
+import {takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
 
 const makeCopy = (book: Book | null) => book ? {...book} : null;
 
@@ -11,11 +13,13 @@ const makeCopy = (book: Book | null) => book ? {...book} : null;
     templateUrl: './books-details.component.html',
     styleUrls: ['./books-details.component.scss']
 })
-export class BooksDetailsComponent {
+export class BooksDetailsComponent implements OnDestroy {
 
     _book: Book | null = null;
 
     formGroup: FormGroup;
+
+    private unsubscribe = new Subject();
 
     get book() {
         return this._book;
@@ -52,8 +56,11 @@ export class BooksDetailsComponent {
     save(): void {
         const newValue = this.extractFormControls();
         if (newValue) {
-            this.booksService.updateBook(newValue);
-            this.goBack();
+            this.booksService.updateBook(newValue)
+                .pipe(takeUntil(this.unsubscribe))
+                .subscribe(_ => {
+                    this.goBack();
+                });
         }
     }
 
@@ -61,9 +68,15 @@ export class BooksDetailsComponent {
         this.updateFormControls();
     }
 
+    ngOnDestroy() {
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
+    }
+
     private goBack() {
         setTimeout(() => this.router.navigate([".."], {relativeTo: this.route}));
     }
+
 
     private updateFormControls(): void {
         this.titleControl.setValue(this._book?.title);

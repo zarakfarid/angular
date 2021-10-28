@@ -3,6 +3,8 @@ import {Book} from "../../model/book";
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {FormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
+import {Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 describe('BooksDetailsComponent', () => {
 
@@ -20,9 +22,19 @@ describe('BooksDetailsComponent', () => {
 
     describe("[class]", () => {
 
+        let unsubscribe: Subject<any> | null;
 
         beforeEach(() => {
             component = new BooksDetailsComponent();
+            unsubscribe = new Subject<any>();
+        });
+
+        afterEach(() => {
+            if(unsubscribe) {
+                unsubscribe.next();
+                unsubscribe.complete();
+            }
+            unsubscribe = null;
         });
 
         it("intially contains no book", () => {
@@ -49,22 +61,29 @@ describe('BooksDetailsComponent', () => {
         it("allows to revert modified book to the original value", () => {
             // given
             component.book = aBook;
+            let modifiedBook: Book | null = null;
+            component.bookUpdated
+                .pipe(takeUntil(unsubscribe!))
+                .subscribe(value => modifiedBook = value);
             // when
-            component.book.title = "Ubik";
+            component.formGroup.controls.title.setValue("Ubik");
+            component.save();
             // then
-            expect(component.book).not.toEqual(aBook);
+            expect(modifiedBook).not.toBeNull();
+            expect(modifiedBook!).not.toEqual(aBook);
             // when
             component.revert();
+            component.save();
             // then
-            expect(component.book).toEqual(aBook);
+            expect(modifiedBook!).toEqual(aBook);
         });
 
         it("emits the current value when save is clicked", () => {
             component.book = aBook;
             const newTitle = "Ubik";
             const newAuthor = "Phillip K Dick";
-            component.book.title = newTitle;
-            component.book.author = newAuthor;
+            component.formGroup.controls.title.setValue(newTitle);
+            component.formGroup.controls.author.setValue(newAuthor);
             let bookUpdated: Book | null = null;
             component.bookUpdated.subscribe(value => {
                 bookUpdated = value;

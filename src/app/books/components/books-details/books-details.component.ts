@@ -41,9 +41,9 @@ export class BooksDetailsComponent {
     }
 
     save(): void {
-        if (this._book) {
-            this.extractFormControls();
-            this.bookUpdated.emit({...this._book});
+        const newValue = this.extractFormControls();
+        if (newValue) {
+            this.bookUpdated.emit(newValue);
         }
     }
 
@@ -57,11 +57,16 @@ export class BooksDetailsComponent {
         this.yearControl.setValue(this._book?.year);
     }
 
-    private extractFormControls(): void {
+    private extractFormControls(): Book | null {
         if (this._book) {
-            this._book.title = this.titleControl.value;
-            this._book.author = this.authorControl.value;
-            this._book.year = this.yearControl.value;
+            return {
+                ...this._book,
+                title: this.titleControl.value,
+                author: this.authorControl.value,
+                year: this.yearControl.value
+            }
+        } else {
+            return null;
         }
     }
 }

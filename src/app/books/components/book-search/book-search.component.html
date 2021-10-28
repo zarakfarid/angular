@@ -1,0 +1,15 @@
+<div class="container">
+  <h4>Search for books</h4>
+  <div>
+    <form [formGroup]="formGroup">
+      <div class="mb-3">
+        <label for="search" class="form-label">Search</label>
+        <input type="text" id="search" class="form-control" formControlName="search">
+      </div>
+    </form>
+  </div>
+
+  <div *ngFor="let book of books$ | async">
+    {{ book.title }}, {{ book.author }}, {{ book.year }}.
+  </div>
+</div>

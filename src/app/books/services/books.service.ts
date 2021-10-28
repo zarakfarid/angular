@@ -40,6 +40,13 @@ export class BooksService {
             tap(_ => this.spinnerService.hide()));
     }
 
+    findBooks(query: string): Observable<Book[]> {
+        const searchFn = (query: string) => {
+          return (book: Book) => book.title.indexOf(query) >= 0 || book.author.indexOf(query) >= 0;
+        };
+        return of(this.books.filter(searchFn(query)));
+    }
+
     getBook(id: number): Observable<Book | undefined> {
         return of(this.books.find(value => value.id === id));
     }

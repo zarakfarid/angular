@@ -6,19 +6,22 @@ import {BookListComponent} from './components/book-list/book-list.component';
 import {BooksService} from "./services/books.service";
 import {BookListResolver} from "./components/book-list/book-list.resolver";
 import {BooksDetailsResolver} from "./components/books-details/books-details.resolver";
+import {BookSearchComponent} from './components/book-search/book-search.component';
 
 
 @NgModule({
     declarations: [
         BooksDetailsComponent,
-        BookListComponent
+        BookListComponent,
+        BookSearchComponent
     ],
     imports: [
         CommonModule, FormsModule, ReactiveFormsModule
     ],
     exports: [
         BooksDetailsComponent,
-        BookListComponent
+        BookListComponent,
+        BookSearchComponent
     ],
     providers: [BooksService, BookListResolver, BooksDetailsResolver]
 })

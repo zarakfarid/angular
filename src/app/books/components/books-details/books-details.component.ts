@@ -1,6 +1,8 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {Book} from "../../model/book";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {ActivatedRoute, Router} from "@angular/router";
+import {BooksService} from "../../services/books.service";
 
 const makeCopy = (book: Book | null) => book ? {...book} : null;
 
@@ -15,7 +17,6 @@ export class BooksDetailsComponent {
 
     formGroup: FormGroup;
 
-    @Input()
     get book() {
         return this._book;
     }
@@ -25,30 +26,43 @@ export class BooksDetailsComponent {
         this.updateFormControls();
     }
 
-    @Output()
-    bookUpdated = new EventEmitter<Book>();
-
     private titleControl = new FormControl("", [Validators.required]);
     private authorControl = new FormControl("", [Validators.required]);
     private yearControl = new FormControl(null, [Validators.required, Validators.min(1000), Validators.max(2022)]);
 
-    constructor() {
+    constructor(
+        private readonly router: Router,
+        private readonly route: ActivatedRoute,
+        private readonly booksService: BooksService
+    ) {
         this.formGroup = new FormGroup({
             title: this.titleControl,
             author: this.authorControl,
             year: this.yearControl
         });
+
+        const state = this.router.getCurrentNavigation()?.extras.state;
+        if (state) {
+            this.book = state as Book;
+        } else {
+            this.goBack();
+        }
     }
 
     save(): void {
         const newValue = this.extractFormControls();
         if (newValue) {
-            this.bookUpdated.emit(newValue);
+            this.booksService.updateBook(newValue);
+            this.goBack();
         }
     }
 
     revert(): void {
         this.updateFormControls();
+    }
+
+    private goBack() {
+        setTimeout(() => this.router.navigate([".."], {relativeTo: this.route}));
     }
 
     private updateFormControls(): void {

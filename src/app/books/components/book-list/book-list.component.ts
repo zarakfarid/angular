@@ -2,6 +2,7 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Book} from "../../model/book";
 import {BooksService} from "../../services/books.service";
 import {Observable} from "rxjs";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
     selector: 'app-book-list',
@@ -11,18 +12,15 @@ import {Observable} from "rxjs";
 export class BookListComponent implements AfterViewInit, OnInit {
 
     books$: Observable<Book[]> | null = null;
-    selectedBook: Book | null = null;
 
-    constructor(private readonly bookService: BooksService) {
+    constructor(
+        private readonly bookService: BooksService,
+        private readonly router: Router,
+        private readonly route: ActivatedRoute) {
     }
 
-    selectBook(book: Book): void {
-        this.selectedBook = book;
-    }
-
-    bookUpdated(book: Book) {
-        this.bookService.updateBook(book);
-        this.selectedBook = null;
+    async selectBook(book: Book) {
+        await this.router.navigate(["edit"], { relativeTo: this.route, state: book });
     }
 
     ngAfterViewInit(): void {

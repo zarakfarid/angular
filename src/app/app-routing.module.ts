@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import {StartPageComponent} from "./start-page/components/start-page/start-page.component";
 import {BookListComponent} from "./books/components/book-list/book-list.component";
 import {NoPageFoundComponent} from "./start-page/components/no-page-found/no-page-found.component";
+import {BooksDetailsComponent} from "./books/components/books-details/books-details.component";
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: "books",
     component: BookListComponent
+  },
+  {
+    path: "books/edit",
+    component: BooksDetailsComponent
   },
   {
     path: "**",

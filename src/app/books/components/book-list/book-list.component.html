@@ -1,17 +1,12 @@
 <div class="container">
   <div class="row">
 
-    <div class="col-4 app-list">
+    <div class="col-12 app-list">
       <div *ngFor="let book of books$ | async" class="card p-2">
         <h5 class="card-title">{{ book.title }}</h5>
         <p>{{ book.author }}, {{ book.year }}</p>
         <button class="btn btn-link" (click)="selectBook(book)">Select</button>
       </div>
     </div>
-    <app-books-details
-        [book]="selectedBook"
-        (bookUpdated)="bookUpdated($event)"
-        class="col-8">
-    </app-books-details>
   </div>
 </div>

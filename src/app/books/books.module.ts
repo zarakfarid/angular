@@ -5,6 +5,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BookListComponent} from './components/book-list/book-list.component';
 import {BooksService} from "./services/books.service";
 import {BookListResolver} from "./components/book-list/book-list.resolver";
+import {BooksDetailsResolver} from "./components/books-details/books-details.resolver";
 
 
 @NgModule({
@@ -19,7 +20,7 @@ import {BookListResolver} from "./components/book-list/book-list.resolver";
         BooksDetailsComponent,
         BookListComponent
     ],
-    providers: [BooksService, BookListResolver]
+    providers: [BooksService, BookListResolver, BooksDetailsResolver]
 })
 export class BooksModule {
 }

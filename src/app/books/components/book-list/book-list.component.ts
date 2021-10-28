@@ -18,7 +18,9 @@ export class BookListComponent {
     }
 
     async selectBook(book: Book) {
-        await this.router.navigate(["edit"], {relativeTo: this.route, state: book});
+        await this.router.navigate([book.id], {
+            relativeTo: this.route
+        });
     }
 
 }

@@ -45,7 +45,7 @@ export class BooksDetailsComponent implements OnDestroy {
             year: this.yearControl
         });
 
-        const state = this.router.getCurrentNavigation()?.extras.state;
+        const state = this.route.snapshot.data.book;
         if (state) {
             this.book = state as Book;
         } else {

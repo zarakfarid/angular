@@ -1,7 +1,7 @@
 import {BooksDetailsComponent} from './books-details.component';
 import {Book} from "../../model/book";
 import {ComponentFixture, TestBed} from "@angular/core/testing";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
@@ -116,7 +116,7 @@ describe('BooksDetailsComponent', () => {
         beforeEach(async () => {
             await TestBed.configureTestingModule({
                 declarations: [BooksDetailsComponent],
-                imports: [CommonModule, FormsModule]
+                imports: [CommonModule, ReactiveFormsModule]
             }).compileComponents();
         });
 
@@ -144,9 +144,11 @@ describe('BooksDetailsComponent', () => {
             // ... });
         });
 
-        it("once the book is edited, its value is propagated ti the model", () => {
+        it("once the book is edited, its modified values are propagated by clicking a save button", () => {
             component.book = aBook;
             fixture.detectChanges();
+            let modifiedBook : Book | null = null;
+            component.bookUpdated.subscribe(value => modifiedBook = value);
 
             const newValues = {
                 author: "Phillip K Dick",
@@ -158,9 +160,10 @@ describe('BooksDetailsComponent', () => {
             editInput(getAuthorInput(), newValues.author);
             editInput(getYearInput(), `${newValues.year}`);
 
-            expect(component.book.title).toBe(newValues.title);
-            expect(component.book.author).toBe(newValues.author);
-            expect(component.book.year).toBe(newValues.year);
+            clickSave();
+
+            expect(modifiedBook).not.toBeNull();
+            expect(modifiedBook!).toEqual({...aBook, ...newValues});
         });
 
         it("once save button is clicked, data is emitted", () => {

@@ -28,9 +28,9 @@ export class BooksDetailsComponent {
     @Output()
     bookUpdated = new EventEmitter<Book>();
 
-    private titleControl = new FormControl("");
-    private authorControl = new FormControl("");
-    private yearControl = new FormControl(null);
+    private titleControl = new FormControl("", [Validators.required]);
+    private authorControl = new FormControl("", [Validators.required]);
+    private yearControl = new FormControl(null, [Validators.required, Validators.min(1000), Validators.max(2022)]);
 
     constructor() {
         this.formGroup = new FormGroup({

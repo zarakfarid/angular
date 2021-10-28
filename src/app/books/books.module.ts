@@ -7,6 +7,7 @@ import {BooksService} from "./services/books.service";
 import {BookListResolver} from "./components/book-list/book-list.resolver";
 import {BooksDetailsResolver} from "./components/books-details/books-details.resolver";
 import {BookSearchComponent} from './components/book-search/book-search.component';
+import {HttpClientModule} from "@angular/common/http";
 
 
 @NgModule({
@@ -16,7 +17,7 @@ import {BookSearchComponent} from './components/book-search/book-search.componen
         BookSearchComponent
     ],
     imports: [
-        CommonModule, FormsModule, ReactiveFormsModule
+        CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule
     ],
     exports: [
         BooksDetailsComponent,

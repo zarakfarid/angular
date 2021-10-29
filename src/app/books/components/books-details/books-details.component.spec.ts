@@ -6,7 +6,6 @@ import {CommonModule} from "@angular/common";
 import {of, Subject} from "rxjs";
 import {RouterTestingModule} from "@angular/router/testing";
 import {BooksService} from "../../services/books.service";
-import {HttpClient} from "@angular/common/http";
 
 describe('BooksDetailsComponent', () => {
 
@@ -105,12 +104,11 @@ describe('BooksDetailsComponent', () => {
         });
     });
 
-    fdescribe("[DOM]", () => {
+    describe("[DOM]", () => {
 
         let fixture: ComponentFixture<BooksDetailsComponent>;
         let nativeElement: HTMLElement;
-        let bookService: BooksService;
-        let httpClientMock: any;
+        let bookServiceMock: any;
 
         const getHTMLInput = (selector: string) => (nativeElement.querySelector(selector) as HTMLInputElement);
         const getTitleInput = () => getHTMLInput("#title");
@@ -125,8 +123,8 @@ describe('BooksDetailsComponent', () => {
         }
 
         beforeEach(() => {
-            httpClientMock = {
-                get: jasmine.createSpy().and.returnValue(of([]))
+            bookServiceMock = {
+                updateBook: jasmine.createSpy().and.returnValue(of(aBook))
             };
         });
 
@@ -135,8 +133,7 @@ describe('BooksDetailsComponent', () => {
                 declarations: [BooksDetailsComponent],
                 imports: [CommonModule, ReactiveFormsModule, RouterTestingModule],
                 providers: [
-                    BooksService,
-                    { provide: HttpClient, useValue: httpClientMock }
+                    { provide: BooksService, useValue: bookServiceMock }
                 ]
             }).compileComponents();
         });
@@ -145,7 +142,6 @@ describe('BooksDetailsComponent', () => {
             fixture = TestBed.createComponent(BooksDetailsComponent);
             component = fixture.componentInstance;
             nativeElement = fixture.nativeElement;
-            bookService = TestBed.inject(BooksService);
             fixture.detectChanges();
         });
 
@@ -166,7 +162,7 @@ describe('BooksDetailsComponent', () => {
             // ... });
         });
 
-        it("once save button is clicked, data is emitted", (done) => {
+        it("once save button is clicked, data is emitted", () => {
             component.book = aBook;
             fixture.detectChanges();
 
@@ -182,11 +178,7 @@ describe('BooksDetailsComponent', () => {
 
             clickSave();
 
-            bookService.getBook(1).subscribe(modifiedBook => {
-                expect(modifiedBook).not.toBeNull();
-                expect(modifiedBook!).toEqual({...aBook, ...newValues});
-                done();
-            });
+            expect(bookServiceMock.updateBook).toHaveBeenCalledOnceWith({...aBook, ...newValues});
         });
     });
 });

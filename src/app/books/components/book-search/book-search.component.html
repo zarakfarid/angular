@@ -12,7 +12,8 @@
     </form>
   </div>
 
-  <div *ngFor="let book of books$ | async">
-    {{ book.title }}, {{ book.author }}, {{ book.year }}.
-  </div>
+  <app-book-card *ngFor="let book of books$ | async"
+    [book]="book"
+    [showSelectLink]="false">
+  </app-book-card>
 </div>

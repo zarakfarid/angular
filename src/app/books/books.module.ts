@@ -8,13 +8,15 @@ import {BookListResolver} from "./components/book-list/book-list.resolver";
 import {BooksDetailsResolver} from "./components/books-details/books-details.resolver";
 import {BookSearchComponent} from './components/book-search/book-search.component';
 import {HttpClientModule} from "@angular/common/http";
+import { BookCardComponent } from './components/book-card/book-card.component';
 
 
 @NgModule({
     declarations: [
         BooksDetailsComponent,
         BookListComponent,
-        BookSearchComponent
+        BookSearchComponent,
+        BookCardComponent
     ],
     imports: [
         CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule

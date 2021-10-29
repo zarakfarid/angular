@@ -2,11 +2,13 @@ import { TestBed } from '@angular/core/testing';
 
 import { BooksService } from './books.service';
 
-xdescribe('BooksService', () => {
+describe('BooksService', () => {
   let service: BooksService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [BooksService]
+    });
     service = TestBed.inject(BooksService);
   });
 

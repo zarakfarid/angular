@@ -2,9 +2,8 @@ import {Injectable} from '@angular/core';
 import {Book} from "../model/book";
 import {SpinnerService} from "../../shared/services/spinner.service";
 import {Observable, of} from "rxjs";
-import {delay, map, tap} from "rxjs/operators";
-
-const DELAY = 1000;
+import { map} from "rxjs/operators";
+import {searchFn} from "../../shared/utils/search-utils";
 
 @Injectable()
 export class BooksService {
@@ -38,12 +37,6 @@ export class BooksService {
     }
 
     findBooks(query: string): Observable<Book[]> {
-        const compare = (left: string, right: string) => {
-            return left.toUpperCase().indexOf(right.toUpperCase()) >= 0;
-        }
-        const searchFn = (query: string) => {
-          return (book: Book) => compare(book.title, query) || compare(book.author, query);
-        };
         return of(this.books.filter(searchFn(query)));
     }
 

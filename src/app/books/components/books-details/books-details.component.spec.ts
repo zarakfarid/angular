@@ -3,7 +3,7 @@ import {Book} from "../../model/book";
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {ReactiveFormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
-import {Subject} from "rxjs";
+import {of, Subject} from "rxjs";
 import {RouterTestingModule} from "@angular/router/testing";
 import {BooksService} from "../../services/books.service";
 
@@ -29,9 +29,19 @@ describe('BooksDetailsComponent', () => {
         let routeMock: any;
 
         beforeEach(() => {
-            booksServiceMock = {};
-            routerMock = {};
-            routeMock = {};
+            booksServiceMock = {
+                updateBook: jasmine.createSpy().and.returnValue(of(aBook))
+            };
+            routerMock = {
+                navigate: jasmine.createSpy()
+            };
+            routeMock = {
+                snapshot: {
+                    data: {
+                        book: null
+                    }
+                }
+            };
 
             component = new BooksDetailsComponent(routerMock, routeMock, booksServiceMock);
             unsubscribe = new Subject<any>();
@@ -69,21 +79,16 @@ describe('BooksDetailsComponent', () => {
         it("allows to revert modified book to the original value", () => {
             // given
             component.book = aBook;
-            let modifiedBook: Book | null = null;
-            // component.bookUpdated
-            //     .pipe(takeUntil(unsubscribe!))
-            //     .subscribe(value => modifiedBook = value);
             // when
             component.formGroup.controls.title.setValue("Ubik");
             component.save();
             // then
-            expect(modifiedBook).not.toBeNull();
-            expect(modifiedBook!).not.toEqual(aBook);
+            expect(booksServiceMock.updateBook).toHaveBeenCalledWith({...aBook, title: "Ubik"});
             // when
             component.revert();
             component.save();
             // then
-            expect(modifiedBook!).toEqual(aBook);
+            expect(booksServiceMock.updateBook).toHaveBeenCalledWith(aBook);
         });
 
         it("emits the current value when save is clicked", () => {
@@ -92,19 +97,14 @@ describe('BooksDetailsComponent', () => {
             const newAuthor = "Phillip K Dick";
             component.formGroup.controls.title.setValue(newTitle);
             component.formGroup.controls.author.setValue(newAuthor);
-            let bookUpdated: Book | null = null;
-            // component.bookUpdated.subscribe(value => {
-            //     bookUpdated = value;
-            // });
             // when
             component.save();
             // then
-            expect(bookUpdated).not.toBeNull();
-            expect(bookUpdated!).toEqual({...aBook, title: newTitle, author: newAuthor});
+            expect(booksServiceMock.updateBook).toHaveBeenCalledOnceWith({...aBook, title: newTitle, author: newAuthor});
         });
     });
 
-    fdescribe("[DOM]", () => {
+    describe("[DOM]", () => {
 
         let fixture: ComponentFixture<BooksDetailsComponent>;
         let nativeElement: HTMLElement;
@@ -155,7 +155,7 @@ describe('BooksDetailsComponent', () => {
             // ... });
         });
 
-        it("once the book is edited, its modified values are propagated by clicking a save button", (done) => {
+        it("once save button is clicked, data is emitted", (done) => {
             component.book = aBook;
             fixture.detectChanges();
 
@@ -176,31 +176,6 @@ describe('BooksDetailsComponent', () => {
                 expect(modifiedBook!).toEqual({...aBook, ...newValues});
                 done();
             });
-        });
-
-        it("once save button is clicked, data is emitted", () => {
-            component.book = aBook;
-            fixture.detectChanges();
-
-            let bookReceived: Book | null = null;
-            // component.bookUpdated.subscribe((value) => {
-            //     bookReceived = value;
-            // });
-
-            const newValues = {
-                author: "Phillip K Dick",
-                title: "Ubik",
-                year: 1970
-            };
-
-            editInput(getTitleInput(), newValues.title);
-            editInput(getAuthorInput(), newValues.author);
-            editInput(getYearInput(), `${newValues.year}`);
-
-            expect(bookReceived).toBeNull();
-
-            clickSave();
-            expect(bookReceived).not.toBeNull();
         });
     });
 });

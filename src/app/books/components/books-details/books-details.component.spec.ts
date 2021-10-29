@@ -6,6 +6,7 @@ import {CommonModule} from "@angular/common";
 import {of, Subject} from "rxjs";
 import {RouterTestingModule} from "@angular/router/testing";
 import {BooksService} from "../../services/books.service";
+import {HttpClient} from "@angular/common/http";
 
 describe('BooksDetailsComponent', () => {
 
@@ -104,11 +105,12 @@ describe('BooksDetailsComponent', () => {
         });
     });
 
-    describe("[DOM]", () => {
+    fdescribe("[DOM]", () => {
 
         let fixture: ComponentFixture<BooksDetailsComponent>;
         let nativeElement: HTMLElement;
         let bookService: BooksService;
+        let httpClientMock: any;
 
         const getHTMLInput = (selector: string) => (nativeElement.querySelector(selector) as HTMLInputElement);
         const getTitleInput = () => getHTMLInput("#title");
@@ -122,11 +124,20 @@ describe('BooksDetailsComponent', () => {
             nativeElement.querySelector("button.app-save-button")?.dispatchEvent(new Event("click"));
         }
 
+        beforeEach(() => {
+            httpClientMock = {
+                get: jasmine.createSpy().and.returnValue(of([]))
+            };
+        });
+
         beforeEach(async () => {
             await TestBed.configureTestingModule({
                 declarations: [BooksDetailsComponent],
                 imports: [CommonModule, ReactiveFormsModule, RouterTestingModule],
-                providers: [BooksService]
+                providers: [
+                    BooksService,
+                    { provide: HttpClient, useValue: httpClientMock }
+                ]
             }).compileComponents();
         });
 

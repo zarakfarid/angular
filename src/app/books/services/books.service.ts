@@ -1,53 +1,32 @@
 import {Injectable} from '@angular/core';
 import {Book} from "../model/book";
-import {SpinnerService} from "../../shared/services/spinner.service";
-import {Observable, of} from "rxjs";
-import { map} from "rxjs/operators";
-import {searchFn} from "../../shared/utils/search-utils";
+import {Observable} from "rxjs";
+import {HttpClient} from "@angular/common/http";
+
+
+const API_PREFIX = "/api/books";
 
 @Injectable()
 export class BooksService {
 
-    private books: Book[] = [
-        {
-            id: 1,
-            title: 'Solaris',
-            author: 'Stanisław Lem',
-            year: 1960
-        },
-        {
-            id: 2,
-            title: '2001: A Space Odyssey',
-            author: 'Arthur C Clarke',
-            year: 1968
-        },
-        {
-            id: 3,
-            title: 'Ubik',
-            author: 'Phillip K Dick',
-            year: 1965
-        }
-    ];
-
-    constructor(private readonly spinnerService: SpinnerService) {
+    constructor(private readonly httpClient: HttpClient) {
     }
 
     getAllBooks(): Observable<Book[]> {
-        return of(this.books);
+        return this.httpClient.get<Book[]>(API_PREFIX);
     }
 
     findBooks(query: string): Observable<Book[]> {
-        return of(this.books.filter(searchFn(query)));
+        return this.httpClient.get<Book[]>(`${API_PREFIX}?q=${query}`);
     }
 
     getBook(id: number): Observable<Book | undefined> {
-        return of(this.books.find(value => value.id === id));
+        return this.httpClient.get<Book | undefined>(`${API_PREFIX}/${id}`);
     }
 
     updateBook(book: Book): Observable<Book> {
         if (book.id !== null) {
-            this.books = this.books.map(current => current.id === book.id ? book : current);
-            return this.getBook(book.id).pipe(map(value => value!));
+            return this.httpClient.put<Book>(`${API_PREFIX}/${book.id}`, book);
         } else {
             throw Error("Book does not have an id.");
         }
